@@ -20,7 +20,7 @@ exports.addApplication = async (req,res) => {
 // Read All
 exports.getAllApplications = async (req, res) => {
 try {
-    const apps = await Application.find();
+    const apps = await applicationModel.find();
     res.json(apps);
 } catch (error) {
     res.status(500).json({ message: 'Error fetching applications', error: error.message });

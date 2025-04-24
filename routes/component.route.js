@@ -3,8 +3,10 @@ var componentRouter = express.Router();
 
 var componentController = require('../controllers/component.controller');
 
-componentRouter.post('/', componentController.addComponent);
-componentRouter.get('/', componentController.getAllComponents);
+componentRouter.post('/addComponent', componentController.addComponent);
+componentRouter.post('/addMultipleComponent', componentController.addMultipleComponents);
+componentRouter.post('/addComponentByName', componentController.addComponentByName);
+componentRouter.get('/getAllComponents', componentController.getAllComponents);
 componentRouter.get('/search', componentController.searchComponents);
 componentRouter.get('/vulnerable', componentController.getVulnerableComponents);
 componentRouter.get('/:id', componentController.getComponentById);

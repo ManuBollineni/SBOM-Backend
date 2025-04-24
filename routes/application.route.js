@@ -6,7 +6,7 @@ var applicationController = require('../controllers/application.controller');
 
 //All application Api operations
 applicationRouter.post('/addApplication', applicationController.addApplication);
-applicationRouter.post('/getAllApplication', applicationController.getAllApplications);
+applicationRouter.get('/getAllApplication', applicationController.getAllApplications);
 applicationRouter.post('/getByIdApplication', applicationController.getApplicationById);
 applicationRouter.post('/updateApplication', applicationController.updateApplication);
 applicationRouter.post('/deleteApplication', applicationController.deleteApplication);

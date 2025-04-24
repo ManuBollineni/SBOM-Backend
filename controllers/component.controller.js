@@ -1,21 +1,84 @@
 var componentModel = require('../models/component.model');
+const axios = require('axios');
+
 
 
 // Create Component
 exports.addComponent = async (req, res) => {
 try {
-    const newComponent = new Component(req.body);
+    console.log("add component", req.body);
+    const newComponent = new componentModel(req.body);
     const savedComponent = await newComponent.save();
     res.status(201).json({ message: 'Component created', data: savedComponent });
 } catch (error) {
+    console.log("Error in adding component", error);
     res.status(500).json({ message: 'Error creating component', error: error.message });
 }
+};
+
+// Create Multiple Components
+exports.addMultipleComponents = async (req, res) => {
+    try {
+      const { components } = req.body;
+      console.log();
+  
+      if (!Array.isArray(components) || components.length === 0) {
+        return res.status(400).json({ message: 'components must be a non-empty array' });
+      }
+  
+      console.log("Received components:", components);
+  
+      const savedComponents = await componentModel.insertMany(components);
+  
+      res.status(201).json({
+        message: 'Components created successfully',
+        data: savedComponents
+      });
+    } catch (error) {
+      console.error("Error in adding multiple components:", error);
+      res.status(500).json({
+        message: 'Error creating components',
+        error: error.message
+      });
+    }
+  };
+
+// Internal call to get components meta data by name.
+exports.addComponentByName = async (req, res) => {
+    try {
+        console.log('component method', req)
+        const { packagesList } = req.body;
+    
+        if (!Array.isArray(packagesList) || packagesList.length === 0) {
+          return res.status(400).json({ message: 'packagesList is required and must be a non-empty array' });
+        }
+
+        // Fetch all metadata in parallel
+        const enrichedPackages = await Promise.all(
+          packagesList.map(pkg =>  getComponentMetaData(pkg.name, pkg.version))
+        );
+    
+        // Filter out any failed/null entries
+        const result = enrichedPackages.filter(pkg => pkg !== null);
+
+        const savedComponents = await componentModel.insertMany(result);
+  
+        res.status(201).json({
+            message: 'Components created successfully',
+            data: savedComponents
+        });
+        console.log("Inside result", result );
+    
+      } catch (error) {
+        console.error('Error in retrieving package metadata:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+      }
 };
 
 // Get All Components
 exports.getAllComponents = async (req, res) => {
 try {
-    const components = await Component.find();
+    const components = await componentModel.find();
     res.json(components);
 } catch (error) {
     res.status(500).json({ message: 'Error fetching components', error: error.message });
@@ -82,3 +145,40 @@ try {
 }
 };
   
+ const getComponentMetaData = async (name, version) => {
+    try {
+
+        if (name.startsWith('@')) {
+            name =  name.split('/')[1]; // removes the scope
+        }
+        console.error(`Inside getComponentMetaData ${name}:`, name);
+
+        const url = `https://registry.npmjs.org/${encodeURIComponent(name)}`;
+        const response  = await axios.get(url);
+        const data = response.data;
+
+        const latest = data['dist-tags'].latest;
+        const versionData = data.versions[latest];
+
+        // name: '',
+        // version: '',
+        // license: '',
+        // supplier: '',
+        // isVulnerable: false,
+
+        const pfgInfo = {
+            name: data.name,
+            version: versionData.version,
+            license: data.license,
+            supplier: '',
+            isVulnerable: false
+        }
+        console.error(`My pfgInfo`, pfgInfo);
+        return pfgInfo;
+
+       
+      } catch (error) {
+        console.error(`Failed to fetch ${name}:`, error.message);
+        return null;
+      }
+}
