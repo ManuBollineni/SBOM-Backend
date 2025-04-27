@@ -8,11 +8,13 @@ require('./models/application.model');
 require('./models/component.model');
 require('./models/sbom.model');
 require('./models/stats.model');
+require('./models/user.model');
 
 const applicationRouter = require('./routes/application.route');
 const componentRouter = require('./routes/component.route');
 const sbomRouter = require('./routes//sbom.route');
 const statRouter = require('./routes/stats.route');
+const authRouter = require('./routes/auth.route');
 
 const app = express();
 DB.connect();
@@ -39,6 +41,7 @@ app.use('/api', applicationRouter);
 app.use('/api', componentRouter);
 app.use('/api', sbomRouter);
 app.use('/api', statRouter);
+app.use('/api', authRouter);
 
 
 //set port, listen for requests
