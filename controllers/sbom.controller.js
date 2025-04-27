@@ -57,3 +57,25 @@ exports.deleteSBOM = async (req, res) => {
     res.status(500).json({ message: 'Error deleting SBOM', error: error.message });
   }
 };
+
+
+// Get SBOM by Application ID
+exports.getSBOMByApplicationId = async (req, res) => {
+  try {
+
+    const applicationId = req.params.id;
+    console.log("application ID", applicationId);
+    const sbom = await SBOM.findOne({ application: applicationId })
+      .populate('application')
+      .populate('components');
+
+    if (!sbom) {
+      return res.status(404).json({ message: 'SBOM not found for the application' });
+    }
+
+    res.json(sbom);
+  } catch (error) {
+    console.error('Error fetching SBOM by application ID:', error);
+    res.status(500).json({ message: 'Error fetching SBOM', error: error.message });
+  }
+};

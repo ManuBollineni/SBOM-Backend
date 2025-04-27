@@ -9,4 +9,4 @@ const componentSchema = new Schema({
     isVulnerable: { type: Boolean, default: false }
 });
 
-module.exports = mongoose.model("Components", componentSchema);
+module.exports = mongoose.model("Component", componentSchema);

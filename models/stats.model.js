@@ -10,4 +10,4 @@ const statsSchema = new Schema({
     lastUpdated: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("Stats", statsSchema);
+module.exports = mongoose.model("Stat", statsSchema);
