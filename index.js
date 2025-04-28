@@ -20,12 +20,30 @@ const app = express();
 DB.connect();
 
 console.log("Database: "+ DB);
+// var corsOptions = {
+//     origin: 'http://localhost:3000', 'https://sbom-frontend.onrender.com',
+//     credentials: true
+// }
+
+// app.use(cors(corsOptions));
+const allowedOrigins = [
+    'http://localhost:3000', 
+    'https://sbom-frontend.onrender.com'
+];
+
 var corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
-}
+};
 
 app.use(cors(corsOptions));
+
 
 // parse requests of content-type - application/json
 app.use(express.json());
