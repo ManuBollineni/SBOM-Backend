@@ -11,7 +11,7 @@ componentRouter.get('/search', componentController.searchComponents);
 componentRouter.get('/vulnerable', componentController.getVulnerableComponents);
 componentRouter.get('/:id', componentController.getComponentById);
 componentRouter.put('/:id', componentController.updateComponent);
-componentRouter.delete('/:id', componentController.deleteComponent);
+componentRouter.delete('/deleteComponent/:id', componentController.deleteComponent);
 
 
 module.exports = componentRouter;

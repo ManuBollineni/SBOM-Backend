@@ -52,7 +52,8 @@ try {
 // Delete
 exports.deleteApplication = async (req, res) => {
 try {
-    const deletedApp = await Application.findByIdAndDelete(req.params.id);
+    console.log("deleted Application", req.params);
+    const deletedApp = await applicationModel.findByIdAndDelete(req.params.id);
     if (!deletedApp) return res.status(404).json({ message: 'Application not found' });
     res.json({ message: 'Application deleted' });
 } catch (error) {

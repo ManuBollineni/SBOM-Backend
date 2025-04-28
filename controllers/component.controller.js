@@ -110,12 +110,15 @@ try {
 // Delete Component
 exports.deleteComponent = async (req, res) => {
 try {
-    const deletedComponent = await Component.findByIdAndDelete(req.params.id);
-    if (!deletedComponent) return res.status(404).json({ message: 'Component not found' });
+    console.log("req params", req.params);
+    const deletedComponent = await componentModel.findByIdAndDelete(req.params.id);
+    if (!deletedComponent) 
+      return res.status(404).json({ message: 'Component not found' });
+    
     res.json({ message: 'Component deleted' });
 } catch (error) {
     res.status(500).json({ message: 'Error deleting component', error: error.message });
-}
+  }
 };
 
 // Search Components (by name, version, supplier)

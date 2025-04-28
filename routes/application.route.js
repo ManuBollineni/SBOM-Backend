@@ -9,7 +9,7 @@ applicationRouter.post('/addApplication', applicationController.addApplication);
 applicationRouter.get('/getAllApplication', applicationController.getAllApplications);
 applicationRouter.post('/getByIdApplication', applicationController.getApplicationById);
 applicationRouter.post('/updateApplication', applicationController.updateApplication);
-applicationRouter.post('/deleteApplication', applicationController.deleteApplication);
+applicationRouter.delete('/deleteApplication/:id', applicationController.deleteApplication);
 applicationRouter.post('/searchApplication', applicationController.searchApplications);
 applicationRouter.post('/getBySBOMApplication', applicationController.getApplicationSBOM);
 applicationRouter.post('/compareApplication', applicationController.compareApplications);
